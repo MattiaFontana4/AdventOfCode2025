@@ -1,9 +1,13 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Text.RegularExpressions;
+
 internal class IdRange
 {
 	public UInt128 MinId { get; private set; }
 	public UInt128 MaxId { get; private set; }
+
+	private static readonly Regex rangeRegex = new Regex(@"^(\d+)(?:\1){1,}$", RegexOptions.Compiled);
 
 	public IdRange(String range)
 	{
@@ -25,15 +29,9 @@ internal class IdRange
 		{
 			String idStr = id.ToString();
 
-			if (idStr.Length % 2 == 0) 
+			if (rangeRegex.IsMatch(idStr))
 			{
-				String idStrSub1 = idStr.Substring(0, idStr.Length / 2);
-				String idStrSub2 = idStr.Substring(idStr.Length / 2, idStr.Length / 2);
-				
-				if (idStrSub1 == idStrSub2)
-				{
-					invalid.Add(id);
-				}
+				invalid.Add(id);
 			}
 		}
 
