@@ -33,4 +33,7 @@ foreach (Istruction instruction in istructions)
 // Output the number of times the dial hit zero
 Console.WriteLine($"Number of times the dial hit zero: {dial.NumberOfZeros}");
 
+// Output the total number of clicks
+Console.WriteLine("Number of clicks: " + dial.NumberOfClicks);
+
 

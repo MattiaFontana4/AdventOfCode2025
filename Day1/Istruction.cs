@@ -31,25 +31,8 @@ namespace Day1
             }
 		}
 
-		public RotationSense Rotation { get; set; }
-        public uint Steps { get; set; }
-
-        public uint ApplyRotation(uint currentState)
-        {
-            switch (Rotation)
-            {
-                case RotationSense.Right:
-                    currentState = (currentState + Steps) % 100;
-                    break;
-                case RotationSense.Left:
-					currentState = (currentState + 100u - (Steps % 100u)) % 100u;
-					break;
-                default:
-                    throw new InvalidOperationException("Unknown rotation sense");
-			}
-
-			return currentState;
-		}
+		public RotationSense Rotation { get; private set;}
+        public uint Steps { get; private  set; }
 
 	}
 }
