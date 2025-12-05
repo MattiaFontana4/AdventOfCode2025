@@ -19,3 +19,10 @@ else
 uint accessibleRollsOfPaper = rollOfPaper.countAccessibleRollOfPaper(3);
 
 Console.WriteLine("Number of accessible rolls of paper: " + accessibleRollsOfPaper);
+
+uint totalRollsOfPaperFemoved = rollOfPaper.RemoveAllAccessibleRollsOfPaper(3);
+
+Console.WriteLine("Total rolls of paper removed: " + totalRollsOfPaperFemoved);
+
+
+

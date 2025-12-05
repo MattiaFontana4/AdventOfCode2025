@@ -86,8 +86,43 @@ public class RollOfPaperHashMap
 		return count;
 	}
 
+	public uint RemoveAccessibleRollsOfPaper(int maxAdjacentPapers)
+	{
+		if (maxAdjacentPapers < 0)
+			throw new ArgumentException("maxAdjacentPapers cannot be negative.");
+
+		uint count = 0;
+		for (int i = 0; i < hashMap.GetLength(0); i++)
+		{
+			for (int j = 0; j < hashMap.GetLength(1); j++)
+			{
+				if (IsRollOfPaperAt(i, j) && IsRollOfPaperAccessible(i, j, maxAdjacentPapers))
+				{
+					hashMap[i, j] = new Element(".");
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	public uint RemoveAllAccessibleRollsOfPaper(int maxAdjacentPapers)
+	{
+		if (maxAdjacentPapers < 0)
+			throw new ArgumentException("maxAdjacentPapers cannot be negative.");
+		uint totalRemoved = 0;
+		uint removedInIteration;
+		do
+		{
+			removedInIteration = RemoveAccessibleRollsOfPaper(maxAdjacentPapers);
+			totalRemoved += removedInIteration;
+		} while (removedInIteration > 0);
+		return totalRemoved;
+	}
 
 }
+
+
 
 internal class Element
 {
