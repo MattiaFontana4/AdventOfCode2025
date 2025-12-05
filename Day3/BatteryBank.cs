@@ -9,13 +9,29 @@ internal class BatteryBank
         joltageRatings = line.Where(c => Char.IsDigit(c)).Select(c => byte.Parse(c.ToString())).ToArray();
     }
 
-    public Byte findMaxJoltageCombination()
+    public ulong findMaxJoltageCombination(int n)
     {
-        var sub1 = joltageRatings[..^1];
-        var max = sub1.Max();
-        var indexOfMax = Array.IndexOf(joltageRatings, max);
-        var sub2 = joltageRatings[(indexOfMax + 1)..];
-        var secondMax = sub2.Max();
-        return (Byte)((max * 10) + secondMax);
+        Byte[] maxes = new byte[n];
+        int startIndex = -1;
+        for (int i = 0; i < n; i++)
+        {
+            var sub = joltageRatings[(startIndex + 1)..^(n - i - 1)];
+            byte currentMax = sub.Max();
+
+            maxes[i] = currentMax;
+
+            var indexOfMax = Array.IndexOf(sub, currentMax);
+
+            startIndex = startIndex + 1 + indexOfMax;
+		}
+
+        ulong sumResult = 0;
+
+		for (int i = 0; i < n; i++)
+        {
+            sumResult += maxes[i] * ((ulong)System.Numerics.BigInteger.Pow(10,n-i-1));
+		}
+
+        return sumResult;
 	}
 }
