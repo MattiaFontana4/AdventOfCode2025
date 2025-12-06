@@ -20,6 +20,25 @@ var count = freshingredietsIds.Count();
 
 Console.WriteLine("Number of fresh ingredient IDs: " + count);
 
+RangeSet freshIdSets = new RangeSet();
+
+freshIdSets.AddRange(freshIdRanges);
+
+freshIdSets.Optimize();
+
+freshIdSets.Optimize();
+
+if (!freshIdSets.IsOptimized()) 
+{ 
+    Console.WriteLine("The RangeSet is not optimized.");
+}
+
+var countTotalFreshIds = freshIdSets.Count;
+
+Console.WriteLine("Total number of fresh ingredient IDs: " + countTotalFreshIds);
+
+
+
 
 
 
