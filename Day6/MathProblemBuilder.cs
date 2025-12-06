@@ -2,48 +2,47 @@
 
 using System.Text.RegularExpressions;
 
-internal class MathProblemBuilder
+public abstract class MathProblemBuilder
 {
-    private string text;
+    protected string text;
 
-	Regex regex = new Regex(@"\s+", RegexOptions.Compiled);
+	protected Regex regex = new Regex(@"\s+", RegexOptions.Compiled);
 
-
-	public MathProblemBuilder(string text)
+	protected MathProblemBuilder(string text)
     {
         this.text = text;
     }
 
-    public IEnumerable<MathProblem> Build()
+    protected string[] SplitLines()
     {
-        string[] lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-        if (lines.Length < 2)
+        return text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+	}
+
+    protected bool checkLineCount(string[] lines)
+    {
+        return lines.Length >= 2;
+    }
+
+    protected string[][] GetMatrix(bool replace)     
+    {
+        string[] lines = SplitLines();
+        if (!checkLineCount(lines))
         {
             throw new Exception("Input text does not contain enough lines.");
         }
 
-        string[][] matrix = lines.Select(line => regex.Replace(line," "))
-            .Select(line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries)).ToArray();
+        var eLines = lines.AsEnumerable();
 
-        List<MathProblem> problems = new List<MathProblem>();
-
-
-        int dim0 = matrix.GetLength(0);
-        int dim1 = matrix[0].GetLength(0);
-
-
-		for (int i = 0; i < dim1; i++)
+        if (replace)
         {
-            string[] column = new string[dim0];
-
-			for (int j = 0; j < dim0; j++)
-            {
-                column[j] = matrix[j][i];
-			}
-
-            problems.Add( new MathProblem(column));
+            eLines = eLines.Select(line => regex.Replace(line, " "));
 		}
 
-		return problems;
+		string[][] matrix = eLines.Select(line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries)).ToArray();
+
+		return matrix;
 	}
+
+    public abstract IEnumerable<MathProblem> Build();
+
 }

@@ -10,12 +10,16 @@ if (!File.Exists(path))
 
 String text = File.ReadAllText(path);
 
-MathProblemBuilder builder = new MathProblemBuilder(text);
+HumanMathProblemBuilder builder = new HumanMathProblemBuilder(text);
 var mathProblem = builder.Build();
 
 decimal finalResult = mathProblem.Select(e=> e.Solve()).Sum();
 
-Console.WriteLine("The final result is: " + finalResult);
+Console.WriteLine("Part One - The final result is: " + finalResult);
 
+CephalopodMathProblemBuilder cephalopodMathProblemBuilder = new CephalopodMathProblemBuilder(text);
 
+decimal cephalopodFinalResult = cephalopodMathProblemBuilder.Build().Select(e => e.Solve()).Sum();
+
+Console.WriteLine("Part Two - The final result is: " + cephalopodFinalResult);
 

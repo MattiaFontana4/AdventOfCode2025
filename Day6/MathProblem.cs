@@ -12,6 +12,7 @@ public class MathProblem
 
 	public MathProblem(IEnumerable<string> operators)
 	{
+
 		bool operatorFound = false;
 
 		foreach (var op in operators)
