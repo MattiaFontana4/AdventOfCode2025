@@ -39,9 +39,12 @@ namespace Day7
 
 
 			TachyonManifold manifold = new TachyonManifold(matrix);
+
 			manifold.Execute();
 
 			Assert.AreEqual(21, manifold.NumTotalSplittings);
+
+			Assert.AreEqual(40, manifold.NumTimelines);
 		}
 	}
 }

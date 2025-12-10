@@ -13,9 +13,9 @@ namespace Day7
         private bool _isBlocked;
 
         private int _actualY;
-        private int _numTimelines;
+        private long _numTimelines;
 
-        public Ray(int startX, int startY, int endY, int timelines = 1)
+        public Ray(int startX, int startY, int endY, long timelines = 1)
         {
             _startX = startX;
             
@@ -33,7 +33,7 @@ namespace Day7
         public int StartY { get { return _startY; } }
         public int ActualY { get { return _actualY; } }
         public int EndY { get { return _endY; } }
-        public int NumTimelines { get { return _numTimelines; } }
+        public long NumTimelines { get { return _numTimelines; } }
 
 		public bool IsBlocked { get { return _isBlocked; } private set { _isBlocked = value; } }
 
@@ -69,7 +69,16 @@ namespace Day7
 
         public void MergeTimelines(Ray ray)
         {
-            _numTimelines += ray.NumTimelines;
+            if( this.IsBlocked)
+                throw new InvalidOperationException("Cannot merge timelines into a blocked ray.");
+
+            if( ray.IsBlocked)
+                throw new InvalidOperationException("Cannot merge timelines from a blocked ray.");
+
+            if ( !this.isRayInside(ray) )
+                throw new InvalidOperationException("Cannot merge timelines from a ray that is not inside this ray.");
+
+			_numTimelines += ray.NumTimelines;
 		}
 
 		public void Block()

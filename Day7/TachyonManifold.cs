@@ -11,9 +11,12 @@ internal class TachyonManifold
 
 	int _numRaysasEnd;
 	int _numTotalSplittings;
+	long _numTimelines;
 
 	public int NumRaysAsEnd { get { return _numRaysasEnd; } }
 	public int NumTotalSplittings { get { return _numTotalSplittings; } }
+
+	public long NumTimelines { get { return _numTimelines; } }
 
 	private List<Splitter> _splitters;
 
@@ -50,7 +53,8 @@ internal class TachyonManifold
 		int totalSplits = 0;
 		List<Ray> rays = new List<Ray>();
 		List<Ray> newrays = new List<Ray>();
-		
+		List<Ray> toAddList = new List<Ray>();
+
 
 		rays.Add(new Ray(_beamEnterWidthIndex, 0, _totalHeight));
 
@@ -71,27 +75,59 @@ internal class TachyonManifold
                     {
                         // Split the ray
                         IEnumerable<Ray> toAdd = blockingSlitter.SplitRay(ray);
-
-                        // Remove rays that are already present
-                        toAdd = toAdd.Where(e => rays.All(r => !r.isRayInside(e)));
-
-                        // Remove rays that are already present in new rays
-                        toAdd = toAdd.Where(e => newrays.All(r => !r.isRayInside(e)));
+						// Prepare the list of rays to add
+						toAddList.Clear();
+						// Remove rays that are already present in new rays
+						foreach (var rayT in toAdd) 
+						{ 
+							var existingRay = newrays.Find(r => r.isRayInside(rayT));
+							if (existingRay != null) 
+							{
+								existingRay.MergeTimelines(rayT);
+							}
+							else 
+							{
+								toAddList.Add(rayT);
+							}
+						}
 
                         // Add the new rays
-                        newrays.AddRange(toAdd);
-                        ray.Block();
+                        newrays.AddRange(toAddList);
+
+						// Block the original ray
+						ray.Block();
+
                         totalSplits++;
                     }
                 }
-                ray.ExecuteStep();
+				ray.ExecuteStep();
             }
-            rays.AddRange(newrays);
-            rays = RemoveDuplicateRays(rays);
+
+			toAddList.Clear();
+
+			foreach (var rayT in newrays)
+			{
+				var existingRay = rays.Find(r => r.isRayInside(rayT));
+				if (existingRay != null)
+				{
+					existingRay.MergeTimelines(rayT);
+				}
+				else
+				{
+					toAddList.Add(rayT);
+				}
+			}
+
+			rays.AddRange(toAddList);
+            
+			rays = RemoveDuplicateRays(rays);
         }
 
         _numRaysasEnd = rays.Count(e => e.isBlockedAtEnd());
 		_numTotalSplittings = totalSplits;
+
+		_numTimelines = rays.Where(e => e.isBlockedAtEnd()).Sum(e => (long)e.NumTimelines);
+
 	}
 
     private List<Ray> RemoveDuplicateRays(List<Ray> rays)

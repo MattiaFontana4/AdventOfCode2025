@@ -31,8 +31,8 @@ namespace Day7
             }
 
             Ray[] rays = new Ray[2];
-            rays[0] = new Ray(incomingRay.StartX - 1, incomingRay.getNextY(), incomingRay.EndY);
-            rays[1] = new Ray(incomingRay.StartX + 1, incomingRay.getNextY(), incomingRay.EndY);
+            rays[0] = new Ray(incomingRay.StartX - 1, incomingRay.getNextY(), incomingRay.EndY, incomingRay.NumTimelines);
+            rays[1] = new Ray(incomingRay.StartX + 1, incomingRay.getNextY(), incomingRay.EndY, incomingRay.NumTimelines);
             return rays;
         }
 

@@ -23,6 +23,8 @@ int numTotalSplittings = manifold.NumTotalSplittings;
 
 Console.WriteLine($"Total number of splittings: {numTotalSplittings}");
 
+long numTimelines = manifold.NumTimelines;
 
+Console.WriteLine("Total number of timelines: " + numTimelines);
 
 
