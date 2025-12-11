@@ -13,8 +13,4 @@
   <Project Path="Day8/Day8.csproj" Id="a3ca9a60-ca4d-4009-acec-7e1562bed3ce">
     <Platform Solution="*|x64" Project="x64" />
   </Project>
-  <Project Path="test/test.pyproj" Type="888888a0-9f3d-457c-b088-3a5042f75d52" Id="56a884c2-1f57-4bfe-b229-381e7e2ccbb9">
-    <Platform Project="AnyCPU" />
-    <Build Project="false" />
-  </Project>
 </Solution>
