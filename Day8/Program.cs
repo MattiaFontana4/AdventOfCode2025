@@ -36,31 +36,9 @@ int product = engine.ProductOfCircuits;
 
 Console.WriteLine($"Product of circuits: {product}");
 
-//SortedSet<Link> edges = new SortedSet<Link>();
+int prodX = engine.ProdX;
 
-//foreach (Position pos in positions)
-//{
-//	foreach (Position pos2 in positions)
-//	{
-//		if (!pos.Equals(pos2))
-//		{
-//			Link link = new Link(pos, pos2);
-//			if (!edges.Contains(link))
-//			{
-//				edges.Add(link);
-//			}
-//		}
-//	}
-//}
-
-
-//List<HashSet<Position>> das = new List<HashSet<Position>>();
-
-//for (int i = 0; i < numberOfConnessions; i++) 
-//{ 
-
-//}
-
+Console.WriteLine($"Prod of X: {prodX}");
 
 
 

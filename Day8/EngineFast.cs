@@ -14,6 +14,10 @@ namespace Day8
 
 		public int ProductOfCircuits { get { return productOfCircuits; } }
 
+		public int prodX;
+
+		public int ProdX { get { return prodX; } }
+
 		public EngineFast(List<Position> positions)
 		{
 			this.positions = positions;
@@ -44,7 +48,9 @@ namespace Day8
 			}
 
 			if (closestA == null || closestB == null)
-				throw new Exception("Dont find");
+			{
+				throw new InvalidOperationException("No valid closest pair found.");
+			}
 
 			return new Link(closestA, closestB);
 		}
@@ -52,62 +58,105 @@ namespace Day8
 
 		public void Execute(int numberOfLinks)
 		{
-			Queue<Link> links = new Queue<Link>();
-			double lastDistance = double.MinValue;
+			List<Link> links = BuildLinks();
 
-			for (int i = 0; i < numberOfLinks; i++)
-			{
-				var link = FindClosestPair(lastDistance, links);
-				lastDistance = link.Distance;
+			var orderdLinks = links.OrderBy(e => e.Distance);
 
-				links.Enqueue(link);
-			}
+			var topNPart1 = orderdLinks.Take(numberOfLinks);
 
-			IEnumerable<Circuit> circuits = BuildCircuit(links);
+			IEnumerable<Circuit> circuits = BuildCircuit(topNPart1);
 
 			var circuitsDim = circuits.Select(e => e.GetLength()).Order().TakeLast(3).ToList();
+
 			productOfCircuits = 1;
 			foreach (var dim in circuitsDim)
 			{
 				productOfCircuits *= dim;
 			}
 
+			// Part 2
+			Link lastLinkPositions = CompleteCircuit(orderdLinks.ToList());
+
+			prodX = lastLinkPositions.Position1.X * lastLinkPositions.Position2.X;
 		}
 
-        private IEnumerable<Circuit> BuildCircuit(Queue<Link> links)
+        private Link CompleteCircuit(List<Link> orderdLinks)
+        {
+			var circuits = new List<Circuit>(positions.Count);
+
+			positions.ForEach(e => 
+			{
+				Circuit newCircuit = new Circuit(e);
+				circuits.Add(newCircuit);
+			});
+
+			Link lastLink = null;
+			int index = 0;
+
+			while (circuits.Count > 1) 
+			{
+				lastLink = orderdLinks[index];
+
+				ProcessLinkForCircuits(circuits, lastLink);
+
+				index++;
+			}
+
+			return lastLink;
+		}
+
+        private List<Link> BuildLinks()
+        {
+			List<Link> links = new List<Link>(positions.Count * (positions.Count -1) / 2);
+
+			for (int i = 0; i < positions.Count; i++) 
+			{
+				for (int j = i + 1; j < positions.Count; j++) 
+				{
+					links.Add(new Link(positions[i], positions[j]));
+				}
+			}
+
+			return links;
+        }
+
+        private IEnumerable<Circuit> BuildCircuit(IEnumerable<Link> links)
         {
             var circuits = new List<Circuit>();
 
-            while (links.Count > 0)
+            foreach (var link in links)
             {
-				var link = links.Dequeue();
-
-                Circuit circuit1 = circuits.Find(e => e.Contains(link.Position1));
-                Circuit circuit2 = circuits.Find(e => e.Contains(link.Position2));
-
-                if (circuit1 == null && circuit2 == null)
-                {
-                    Circuit newCircuit = new Circuit(link.Position2);
-                    newCircuit.Add(link.Position1, link.Position2);
-                    circuits.Add(newCircuit);
-                }
-                else if (circuit2 == null && circuit1 != null)
-                {
-                    circuit1.Add(link.Position2, link.Position1);
-                }
-                else if (circuit1 == null && circuit2 != null)
-                {
-                    circuit2.Add(link.Position1, link.Position2);
-                }
-                else if (circuit1 != null && circuit2 != null && !circuit1.Equals(circuit2))
-                {
-                    // Only call Merge if both circuitA and circuitB are not null and not the same instance
-                    circuit1.Merge(circuit2, link.Position1, link.Position2);
-                    circuits.Remove(circuit2);
-                }
+                ProcessLinkForCircuits(circuits, link);
             }
 
             return circuits;
         }
-    }
+
+		private void ProcessLinkForCircuits(List<Circuit> circuits, Link link)
+		{
+			Circuit circuit1 = circuits.Find(e => e.Contains(link.Position1));
+			Circuit circuit2 = circuits.Find(e => e.Contains(link.Position2));
+
+			if (circuit1 == null && circuit2 == null)
+			{
+				Circuit newCircuit = new Circuit(link.Position2);
+				newCircuit.Add(link.Position1, link.Position2);
+				circuits.Add(newCircuit);
+			}
+			else if (circuit2 == null && circuit1 != null)
+			{
+				circuit1.Add(link.Position2, link.Position1);
+			}
+			else if (circuit1 == null && circuit2 != null)
+			{
+				circuit2.Add(link.Position1, link.Position2);
+			}
+			else if (circuit1 != null && circuit2 != null && !circuit1.Equals(circuit2))
+			{
+				// Only call Merge if both circuitA and circuitB are not null and not the same instance
+				circuit1.Merge(circuit2, link.Position1, link.Position2);
+				circuits.Remove(circuit2);
+			}
+		}
+	}
 }
