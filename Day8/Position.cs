@@ -27,7 +27,7 @@ namespace Day8
 			int deltaX = other.x - this.x;
 			int deltaY = other.y - this.y;
 			int deltaZ = other.z - this.z;
-			var result = Math.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+			var result = Math.Sqrt((long)deltaX * (long)deltaX + (long)deltaY * (long)deltaY + (long)deltaZ * (long)deltaZ);
 
 			if (double.IsNaN(result))
 				result = double.MaxValue;
@@ -41,7 +41,7 @@ namespace Day8
 			int deltaX = this.x;
 			int deltaY = this.y;
 			int deltaZ = this.z;
-			var result = Math.Sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+			var result = Math.Sqrt((long)deltaX * (long)deltaX + (long)deltaY * (long)deltaY + (long)deltaZ * (long)deltaZ);
 			return result;
 		}
 
