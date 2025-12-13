@@ -13,4 +13,5 @@
   <Project Path="Day8/Day8.csproj" Id="a3ca9a60-ca4d-4009-acec-7e1562bed3ce">
     <Platform Solution="*|x64" Project="x64" />
   </Project>
+  <Project Path="Day9/Day9.csproj" Id="6f2769d3-6735-4dcc-9fd7-b03490aaba1c" />
 </Solution>
